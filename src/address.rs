@@ -6,8 +6,8 @@ use serde::Serializer;
 use std::fmt::{self, Display};
 use std::str;
 use std::str::FromStr;
-use utils::bytes_to_hex_str;
-use utils::{hex_str_to_bytes, ByteDecodeError};
+use crate::utils::bytes_to_hex_str;
+use crate::utils::{hex_str_to_bytes, ByteDecodeError};
 
 /// Representation of an Ethereum address.
 ///

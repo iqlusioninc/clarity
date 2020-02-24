@@ -87,9 +87,9 @@ pub mod transaction;
 pub mod types;
 pub mod utils;
 
-pub use address::Address;
-pub use error::ClarityError;
-pub use private_key::PrivateKey;
-pub use signature::Signature;
-pub use transaction::Transaction;
-pub use types::BigEndianInt;
+pub use crate::address::Address;
+pub use crate::error::ClarityError;
+pub use crate::private_key::PrivateKey;
+pub use crate::signature::Signature;
+pub use crate::transaction::Transaction;
+pub use crate::types::BigEndianInt;

@@ -23,7 +23,7 @@ use std::io;
 use std::io::BufReader;
 use std::iter::FromIterator;
 use std::path::{Path, PathBuf};
-use test::{DynTestFn, DynTestName, ShouldPanic, TestDesc, TestDescAndFn};
+use crate::test::{DynTestFn, DynTestName, ShouldPanic, TestDesc, TestDescAndFn};
 
 fn visit_dirs(dir: &Path, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
     if dir.is_dir() {

@@ -1,6 +1,6 @@
-use address::Address;
-use context::SECP256K1;
-use error::ClarityError;
+use crate::address::Address;
+use crate::context::SECP256K1;
+use crate::error::ClarityError;
 use failure::Error;
 use num256::Uint256;
 use secp256k1::{Message, PublicKey, SecretKey};
@@ -9,10 +9,10 @@ use serde::Deserializer;
 use serde::Serialize;
 use serde::Serializer;
 use sha3::{Digest, Keccak256};
-use signature::Signature;
+use crate::signature::Signature;
 use std::fmt;
 use std::str::FromStr;
-use utils::{bytes_to_hex_str, hex_str_to_bytes};
+use crate::utils::{bytes_to_hex_str, hex_str_to_bytes};
 
 #[derive(Fail, Debug, PartialEq)]
 pub enum PrivateKeyError {
@@ -268,7 +268,7 @@ fn invalid_data() {
 
 #[test]
 fn parse_address_1() {
-    use utils::bytes_to_hex_str;
+    use crate::utils::bytes_to_hex_str;
     // https://github.com/ethereum/tests/blob/b44cea1cccf1e4b63a05d1ca9f70f2063f28da6d/BasicTests/txtest.json
     let key: PrivateKey = "c85ef7d79691fe79573b1a7064c19c1a9819ebdbd1faaab1a8ec92344438aaf4"
         .parse()
@@ -291,7 +291,7 @@ fn parse_address_1() {
 
 #[test]
 fn parse_address_2() {
-    use utils::bytes_to_hex_str;
+    use crate::utils::bytes_to_hex_str;
     // https://github.com/ethereum/tests/blob/b44cea1cccf1e4b63a05d1ca9f70f2063f28da6d/BasicTests/txtest.json
     let key: PrivateKey = "c87f65ff3f271bf5dc8643484f66b200109caffe4bf98c4cb393dc35740b28c0"
         .parse()
