@@ -10,6 +10,8 @@ include = [
 description = "Lightweight Ethereum client"
 repository = "https://github.com/althea-mesh/clarity"
 license-file = "LICENSE"
+edition     = "2018"
+
 
 [badges]
 travis-ci = { repository = "althea-mesh/clarity", branch = "master" }
