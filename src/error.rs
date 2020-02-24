@@ -2,6 +2,9 @@
 /// error states.
 ///
 /// This is shared by a whole crate.
+///
+use failure::Fail;
+
 #[derive(Fail, Debug)]
 pub enum ClarityError {
     #[fail(display = "Invalid network id")]

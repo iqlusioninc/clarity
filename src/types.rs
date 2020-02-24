@@ -1,5 +1,6 @@
-use num256::Uint256;
 use crate::utils::{big_endian_uint256_deserialize, big_endian_uint256_serialize};
+use num256::Uint256;
+use serde_derive::{Deserialize, Serialize};
 
 /// A thin wrapper type to change the way Uint256 is serialized.
 ///

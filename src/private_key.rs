@@ -1,7 +1,9 @@
 use crate::address::Address;
 use crate::context::SECP256K1;
 use crate::error::ClarityError;
-use failure::Error;
+use crate::signature::Signature;
+use crate::utils::{bytes_to_hex_str, hex_str_to_bytes};
+use failure::{Error, Fail};
 use num256::Uint256;
 use secp256k1::{Message, PublicKey, SecretKey};
 use serde::Deserialize;
@@ -9,10 +11,8 @@ use serde::Deserializer;
 use serde::Serialize;
 use serde::Serializer;
 use sha3::{Digest, Keccak256};
-use crate::signature::Signature;
 use std::fmt;
 use std::str::FromStr;
-use crate::utils::{bytes_to_hex_str, hex_str_to_bytes};
 
 #[derive(Fail, Debug, PartialEq)]
 pub enum PrivateKeyError {

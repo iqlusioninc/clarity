@@ -2,14 +2,16 @@ use crate::address::Address;
 use crate::constants::SECPK1N;
 use crate::context::SECP256K1;
 use crate::error::ClarityError;
-use failure::Error;
+use failure::{ensure, format_err, Error};
 use num256::Uint256;
 use num_traits::{ToPrimitive, Zero};
 use secp256k1::recovery::{RecoverableSignature, RecoveryId};
 use secp256k1::Message;
+use serde_derive::{Deserialize, Serialize};
 use sha3::{Digest, Keccak256};
 use std::fmt;
 use std::str::FromStr;
+
 use crate::utils::{
     big_endian_uint256_deserialize, big_endian_uint256_serialize, bytes_to_hex_str,
     hex_str_to_bytes,

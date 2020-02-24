@@ -1,3 +1,4 @@
+use lazy_static::lazy_static;
 use num256::Uint256;
 use std::str::FromStr;
 

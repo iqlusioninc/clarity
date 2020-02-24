@@ -7,6 +7,7 @@ extern crate serde_json;
 extern crate serde_rlp;
 #[macro_use]
 extern crate serde_derive;
+use crate::test::{DynTestFn, DynTestName, ShouldPanic, TestDesc, TestDescAndFn};
 use clarity::utils::{bytes_to_hex_str, hex_str_to_bytes};
 use clarity::{Address, Signature, Transaction};
 use num256::Uint256;
@@ -23,7 +24,6 @@ use std::io;
 use std::io::BufReader;
 use std::iter::FromIterator;
 use std::path::{Path, PathBuf};
-use crate::test::{DynTestFn, DynTestName, ShouldPanic, TestDesc, TestDescAndFn};
 
 fn visit_dirs(dir: &Path, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
     if dir.is_dir() {

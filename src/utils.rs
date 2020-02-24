@@ -1,4 +1,4 @@
-use failure::Error;
+use failure::{Error, Fail};
 use num256::Uint256;
 use serde::{
     de::{Deserialize, Deserializer},

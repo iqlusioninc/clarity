@@ -3,28 +3,29 @@ use crate::constants::SECPK1N;
 use crate::constants::TT256;
 use crate::context::SECP256K1;
 use crate::error::ClarityError;
-use failure::Error;
-use num256::Uint256;
-use num_traits::ToPrimitive;
-use num_traits::Zero;
 use crate::opcodes::GTXCOST;
 use crate::opcodes::GTXDATANONZERO;
 use crate::opcodes::GTXDATAZERO;
 use crate::private_key::PrivateKey;
 use crate::rlp::AddressDef;
+use crate::signature::Signature;
+use crate::types::BigEndianInt;
+use crate::utils::bytes_to_hex_str;
+use crate::utils::zpad;
+use failure::Error;
+use num256::Uint256;
+use num_traits::ToPrimitive;
+use num_traits::Zero;
 use secp256k1::recovery::{RecoverableSignature, RecoveryId};
 use secp256k1::Message;
 use serde::Serialize;
 use serde::Serializer;
 use serde_bytes::ByteBuf;
+use serde_derive::{Deserialize, Serialize};
 use serde_rlp::ser::to_bytes;
 use sha3::{Digest, Keccak256};
-use crate::signature::Signature;
 use std::fmt;
 use std::fmt::Display;
-use crate::types::BigEndianInt;
-use crate::utils::bytes_to_hex_str;
-use crate::utils::zpad;
 
 /// Transaction as explained in the Ethereum Yellow paper section 4.2
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -278,8 +279,8 @@ impl Transaction {
 
 #[test]
 fn test_vitaliks_eip_158_vitalik_12_json() {
-    use serde_rlp::ser::to_bytes;
     use crate::utils::{bytes_to_hex_str, hex_str_to_bytes};
+    use serde_rlp::ser::to_bytes;
     // https://github.com/ethereum/tests/blob/69f55e8608126e6470c2888a5b344c93c1550f40/TransactionTests/ttEip155VitaliksEip158/Vitalik_12.json
     let tx = Transaction {
         nonce: Uint256::from_str_radix("0e", 16).unwrap(),
@@ -315,8 +316,8 @@ fn test_vitaliks_eip_158_vitalik_12_json() {
 
 #[test]
 fn test_vitaliks_eip_158_vitalik_1_json() {
-    use serde_rlp::ser::to_bytes;
     use crate::utils::bytes_to_hex_str;
+    use serde_rlp::ser::to_bytes;
     // https://github.com/ethereum/tests/blob/69f55e8608126e6470c2888a5b344c93c1550f40/TransactionTests/ttEip155VitaliksEip158/Vitalik_12.json
     let tx = Transaction {
         nonce: Uint256::from_str_radix("00", 16).unwrap(),
@@ -347,8 +348,8 @@ fn test_vitaliks_eip_158_vitalik_1_json() {
 
 #[test]
 fn test_basictests_txtest_1() {
-    use serde_rlp::ser::to_bytes;
     use crate::utils::bytes_to_hex_str;
+    use serde_rlp::ser::to_bytes;
     // https://github.com/ethereum/tests/blob/b44cea1cccf1e4b63a05d1ca9f70f2063f28da6d/BasicTests/txtest.json
     let tx = Transaction {
         nonce: Uint256::from_str_radix("00", 16).unwrap(),
@@ -382,8 +383,8 @@ fn test_basictests_txtest_1() {
 
 #[test]
 fn test_basictests_txtest_2() {
-    use serde_rlp::ser::to_bytes;
     use crate::utils::{bytes_to_hex_str, hex_str_to_bytes};
+    use serde_rlp::ser::to_bytes;
     // https://github.com/ethereum/tests/blob/b44cea1cccf1e4b63a05d1ca9f70f2063f28da6d/BasicTests/txtest.json
     let tx = Transaction {
         nonce: "0".parse().unwrap(),

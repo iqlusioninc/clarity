@@ -1,4 +1,6 @@
-use failure::Error;
+use crate::utils::bytes_to_hex_str;
+use crate::utils::{hex_str_to_bytes, ByteDecodeError};
+use failure::{ensure, Error, Fail};
 use serde::Deserialize;
 use serde::Deserializer;
 use serde::Serialize;
@@ -6,8 +8,6 @@ use serde::Serializer;
 use std::fmt::{self, Display};
 use std::str;
 use std::str::FromStr;
-use crate::utils::bytes_to_hex_str;
-use crate::utils::{hex_str_to_bytes, ByteDecodeError};
 
 /// Representation of an Ethereum address.
 ///

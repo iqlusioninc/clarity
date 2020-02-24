@@ -58,22 +58,6 @@
 #![warn(clippy::all)]
 #![allow(clippy::pedantic)]
 
-extern crate num_bigint;
-extern crate num_traits;
-extern crate serde;
-extern crate serde_bytes;
-extern crate serde_rlp;
-#[macro_use]
-extern crate failure;
-extern crate secp256k1;
-extern crate sha3;
-#[macro_use]
-extern crate lazy_static;
-#[macro_use]
-extern crate serde_derive;
-extern crate bytecount;
-extern crate num256;
-
 pub mod abi;
 pub mod address;
 pub mod constants;
