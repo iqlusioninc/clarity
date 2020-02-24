@@ -21,7 +21,7 @@ use secp256k1::Message;
 use serde::Serialize;
 use serde::Serializer;
 use serde_bytes::ByteBuf;
-use serde_derive::{Deserialize, Serialize};
+
 use serde_rlp::ser::to_bytes;
 use sha3::{Digest, Keccak256};
 use std::fmt;
