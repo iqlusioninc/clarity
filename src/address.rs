@@ -5,6 +5,7 @@ use serde::Deserialize;
 use serde::Deserializer;
 use serde::Serialize;
 use serde::Serializer;
+use sha3::{Digest, Keccak256};
 use std::fmt::{self, Display};
 use std::str;
 use std::str::FromStr;
@@ -34,6 +35,17 @@ impl Address {
         let mut result: [u8; 20] = Default::default();
         result.copy_from_slice(&data);
         Ok(Address(result))
+    }
+
+    pub fn from_public_key_bytes(pubkey: &[u8]) -> Result<Address, Error> {
+        ensure!(
+            pubkey.len() == 65,
+            "Address requires exactly 65 bytes but {} were found",
+            pubkey.len()
+        );
+        let addr = Keccak256::digest(&pubkey[1..]);
+        debug_assert_eq!(addr.len(), 32);
+        Address::from_slice(&addr[12..])
     }
 }
 

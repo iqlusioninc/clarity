@@ -9,6 +9,7 @@ use secp256k1::recovery::{RecoverableSignature, RecoveryId};
 use secp256k1::Message;
 use serde_derive::{Deserialize, Serialize};
 use sha3::{Digest, Keccak256};
+use signatory::ecdsa::{curve::Secp256k1, FixedSignature};
 use std::fmt;
 use std::str::FromStr;
 
@@ -184,9 +185,35 @@ impl Signature {
             return Err(ClarityError::ZeroPrivKey.into());
         }
         // Finally an address is last 20 bytes of a hash of the public key.
-        let sender = Keccak256::digest(&pkey[1..]);
-        debug_assert_eq!(sender.len(), 32);
-        Address::from_slice(&sender[12..])
+        Address::from_public_key_bytes(&pkey)
+    }
+
+    pub fn from_fixed(sig: FixedSignature<Secp256k1>, addr: Address, hash: &[u8]) -> Signature {
+        let r: Uint256 = {
+            let mut data: [u8; 32] = Default::default();
+            data.copy_from_slice(&sig.as_ref()[0..32]);
+            data.into()
+        };
+
+        let s: Uint256 = {
+            let mut data: [u8; 32] = Default::default();
+            data.copy_from_slice(&sig.as_ref()[32..64]);
+            data.into()
+        };
+
+        let v = 0u16;
+
+        let mut trial_sig = Signature::new(v.into(), r, s);
+
+        loop {
+            if let Ok(rec_addr) = trial_sig.recover(hash) {
+                if rec_addr == addr {
+                    break;
+                }
+            }
+            trial_sig.v += Uint256::from(1u16);
+        }
+        trial_sig
     }
 }
 
@@ -266,6 +293,36 @@ impl fmt::UpperHex for Signature {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use secp256k1::PublicKey;
+    use sha3::Keccak256;
+    use signatory::{
+        public_key::PublicKeyed,
+        signature::{digest::Digest, DigestSigner},
+    };
+    use signatory_secp256k1::{EcdsaSigner, SecretKey};
+    #[test]
+    fn from_fixed_round_trip() {
+        let signer =
+            EcdsaSigner::from(&SecretKey::from_bytes(Keccak256::digest(b"hello_secret")).unwrap());
+
+        let pk = signer.public_key().unwrap();
+
+        let rawPublicKey = PublicKey::from_slice(pk.as_ref()).unwrap();
+
+        let addr = Address::from_public_key_bytes(&rawPublicKey.serialize_uncompressed()).unwrap();
+
+        let mut hasher = Keccak256::new();
+
+        hasher.input(b"hello_world");
+
+        let sig = signer.try_sign_digest(hasher).unwrap();
+
+        Signature::from_fixed(sig, addr, Keccak256::digest(b"hello_world").as_ref());
+    }
+}
 #[test]
 fn new_signature() {
     let sig = Signature::new(1u32.into(), 2u32.into(), 3u32.into());
