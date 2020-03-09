@@ -188,7 +188,10 @@ impl Signature {
         Address::from_public_key_bytes(&pkey)
     }
 
-    pub fn from_fixed(sig: FixedSignature<Secp256k1>, addr: Address, hash: &[u8]) -> Signature {
+    pub fn from_fixed(sig: FixedSignature<Secp256k1>, addr: Address, msg: &[u8]) -> Signature {
+
+        let hash = Keccak256::digest(&msg);
+
         let r: Uint256 = {
             let mut data: [u8; 32] = Default::default();
             data.copy_from_slice(&sig.as_ref()[0..32]);
@@ -206,7 +209,7 @@ impl Signature {
         let mut trial_sig = Signature::new(v.into(), r, s);
 
         loop {
-            if let Ok(rec_addr) = trial_sig.recover(hash) {
+            if let Ok(rec_addr) = trial_sig.recover(&hash) {
                 if rec_addr == addr {
                     break;
                 }
@@ -310,9 +313,9 @@ mod tests {
 
         let pk = signer.public_key().unwrap();
 
-        let rawPublicKey = PublicKey::from_slice(pk.as_ref()).unwrap();
+        let raw_public_key = PublicKey::from_slice(pk.as_ref()).unwrap();
 
-        let addr = Address::from_public_key_bytes(&rawPublicKey.serialize_uncompressed()).unwrap();
+        let addr = Address::from_public_key_bytes(&raw_public_key.serialize_uncompressed()).unwrap();
 
         let mut hasher = Keccak256::new();
 
@@ -320,7 +323,7 @@ mod tests {
 
         let sig = signer.try_sign_digest(hasher).unwrap();
 
-        Signature::from_fixed(sig, addr, Keccak256::digest(b"hello_world").as_ref());
+        Signature::from_fixed(sig, addr, b"hello_world".as_ref());
     }
 }
 #[test]
